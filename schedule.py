@@ -13,7 +13,7 @@ db = SQLAlchemy(app)
 class Para(db.Model):
     __tablename__ = 'Para'
     id = db.Column(db.Integer, primary_key=True)
-    teacher_id = db.Column(db.Integer, nullable=True)
+    teacher_id = db.Column(db.Integer, nullable=True)  # Ensure this line is present
     group_id = db.Column(db.Integer, nullable=True)
     room_id = db.Column(db.Integer, nullable=True)
     subject_id = db.Column(db.Integer, nullable=True)
