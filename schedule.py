@@ -22,18 +22,18 @@ class Para(db.Model):
     PairNumber = db.Column(db.Integer, nullable=True)
 
 class Room(db.Model):
-    __tablename__ = 'Room'
+    __tablename__ = 'Rooms'
     ID = db.Column(db.Integer, primary_key=True)
     RoomNumber = db.Column(db.String(50), nullable=True)
     RoomTypeID = db.Column(db.Integer, nullable=True)
 
 class RoomType(db.Model):
-    __tablename__ = 'RoomType'
+    __tablename__ = 'RoomTypes'
     ID = db.Column(db.Integer, primary_key=True)
     Name = db.Column(db.String(255), nullable=True)
 
 class Subject(db.Model):
-    __tablename__ = 'Subject'
+    __tablename__ = 'Subjects'
     ID = db.Column(db.Integer, primary_key=True)
     Name = db.Column(db.String(255), nullable=True)
     SubjectCode = db.Column(db.String(50), nullable=True)
@@ -42,7 +42,7 @@ class Subject(db.Model):
     PracticalHours = db.Column(db.Integer, nullable=True)
 
 class Teacher(db.Model):
-    __tablename__ = 'Teacher'
+    __tablename__ = 'Teachers'
     ID = db.Column(db.Integer, primary_key=True)
     LastName = db.Column(db.String(255), nullable=True)
     FirstName = db.Column(db.String(255), nullable=True)
@@ -54,7 +54,7 @@ class Day(db.Model):
     Date = db.Column(db.String(50), nullable=True)
 
 class Group(db.Model):
-    __tablename__ = 'Group'
+    __tablename__ = 'Groups'
     ID = db.Column(db.Integer, primary_key=True)
     Direction = db.Column(db.String(255), nullable=True)
     GroupCode = db.Column(db.String(50), nullable=True)
