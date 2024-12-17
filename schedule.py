@@ -63,44 +63,28 @@ class Group(db.Model):
 # Create the API endpoint to fetch the schedule
 @app.route('/schedule', methods=['GET'])
 def get_schedule():
-    paras = db.session.query(
-        Para,
-        Teacher.last_name,
-        Teacher.first_name,
-        Teacher.middle_name,
-        Group.name.label('group_name'),
-        Room.room_number,
-        Subject.name.label('subject_name'),
-        Day.date
-    ).join(
-        Teacher, Para.TeacherID == Teacher.id
-    ).join(
-        Group, Para.GroupID == Group.id
-    ).join(
-        Room, Para.RoomID == Room.id
-    ).join(
-        Subject, Para.SubjectID == Subject.id
-    ).join(
-        Day, Para.DayID == Day.id
-    ).all()
-
-    # Debug statement to print the query result
-    print(paras)
+    paras = db.session.query(Para).all()
 
     schedule = []
-    for para, teacher_last_name, teacher_first_name, teacher_middle_name, group_name, room_number, subject_name, date in paras:
+    for para in paras:
+        teacher = db.session.query(Teacher).filter_by(id=para.TeacherID).first()
+        group = db.session.query(Group).filter_by(id=para.GroupID).first()
+        room = db.session.query(Room).filter_by(id=para.RoomID).first()
+        subject = db.session.query(Subject).filter_by(id=para.SubjectID).first()
+        day = db.session.query(Day).filter_by(id=para.DayID).first()
+
         schedule.append({
             'ID': para.ID,
-            'Teacher': f"{teacher_last_name} {teacher_first_name} {teacher_middle_name}",
-            'Group': group_name,
-            'Room': room_number,
-            'Subject': subject_name,
-            'Day': date,
+            'Teacher': f"{teacher.last_name} {teacher.first_name} {teacher.middle_name}" if teacher else None,
+            'Group': group.name if group else None,
+            'Room': room.room_number if room else None,
+            'Subject': subject.name if subject else None,
+            'Day': day.date if day else None,
             'ClassNumber': para.ClassNumber,
             'PairNumber': para.PairNumber
         })
-    return jsonify(schedule)
 
+    return jsonify(schedule)
 
 if __name__ == '__main__':
     app.run(debug=True, host="0.0.0.0", port=5321)
