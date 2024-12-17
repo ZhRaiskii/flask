@@ -47,7 +47,7 @@ class Teacher(db.Model):
     MiddleName = db.Column(db.String(255), nullable=True)
 
 class Day(db.Model):
-    __tablename__ = 'Day'
+    __tablename__ = 'Days'
     ID = db.Column(db.Integer, primary_key=True)
     Date = db.Column(db.String(50), nullable=True)
 
