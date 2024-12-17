@@ -21,7 +21,6 @@ class Para(db.Model):
     ClassNumber = db.Column(db.Integer, nullable=True)
     PairNumber = db.Column(db.Integer, nullable=True)
 
-
 class Room(db.Model):
     __tablename__ = 'Room'
     id = db.Column(db.Integer, primary_key=True)
@@ -64,21 +63,40 @@ class Group(db.Model):
 # Create the API endpoint to fetch the schedule
 @app.route('/schedule', methods=['GET'])
 def get_schedule():
-    paras = Para.query.all()
+    paras = db.session.query(
+        Para,
+        Teacher.last_name,
+        Teacher.first_name,
+        Teacher.middle_name,
+        Group.name.label('group_name'),
+        Room.room_number,
+        Subject.name.label('subject_name'),
+        Day.date
+    ).join(
+        Teacher, Para.TeacherID == Teacher.id
+    ).join(
+        Group, Para.GroupID == Group.id
+    ).join(
+        Room, Para.RoomID == Room.id
+    ).join(
+        Subject, Para.SubjectID == Subject.id
+    ).join(
+        Day, Para.DayID == Day.id
+    ).all()
+
     schedule = []
-    for para in paras:
+    for para, teacher_last_name, teacher_first_name, teacher_middle_name, group_name, room_number, subject_name, date in paras:
         schedule.append({
             'ID': para.ID,
-            'TeacherID': para.TeacherID,
-            'GroupID': para.GroupID,
-            'RoomID': para.RoomID,
-            'SubjectID': para.SubjectID,
-            'DayID': para.DayID,
+            'Teacher': f"{teacher_last_name} {teacher_first_name} {teacher_middle_name}",
+            'Group': group_name,
+            'Room': room_number,
+            'Subject': subject_name,
+            'Day': date,
             'ClassNumber': para.ClassNumber,
             'PairNumber': para.PairNumber
         })
     return jsonify(schedule)
-
 
 if __name__ == '__main__':
     app.run(debug=True, host="0.0.0.0", port=5321)
