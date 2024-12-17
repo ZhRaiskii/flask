@@ -23,63 +23,70 @@ class Para(db.Model):
 
 class Room(db.Model):
     __tablename__ = 'Room'
-    id = db.Column(db.Integer, primary_key=True)
-    room_number = db.Column(db.String(50), nullable=True)
-    room_type_id = db.Column(db.Integer, nullable=True)
+    ID = db.Column(db.Integer, primary_key=True)
+    RoomNumber = db.Column(db.String(50), nullable=True)
+    RoomTypeID = db.Column(db.Integer, nullable=True)
 
 class RoomType(db.Model):
     __tablename__ = 'RoomType'
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(255), nullable=True)
+    ID = db.Column(db.Integer, primary_key=True)
+    Name = db.Column(db.String(255), nullable=True)
 
 class Subject(db.Model):
     __tablename__ = 'Subject'
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(255), nullable=True)
-    subject_code = db.Column(db.String(50), nullable=True)
-    lecture_hours = db.Column(db.Integer, nullable=True)
-    lab_hours = db.Column(db.Integer, nullable=True)
-    practical_hours = db.Column(db.Integer, nullable=True)
+    ID = db.Column(db.Integer, primary_key=True)
+    Name = db.Column(db.String(255), nullable=True)
+    SubjectCode = db.Column(db.String(50), nullable=True)
+    LectureHours = db.Column(db.Integer, nullable=True)
+    LabHours = db.Column(db.Integer, nullable=True)
+    PracticalHours = db.Column(db.Integer, nullable=True)
 
 class Teacher(db.Model):
     __tablename__ = 'Teacher'
-    id = db.Column(db.Integer, primary_key=True)
-    last_name = db.Column(db.String(255), nullable=True)
-    first_name = db.Column(db.String(255), nullable=True)
-    middle_name = db.Column(db.String(255), nullable=True)
+    ID = db.Column(db.Integer, primary_key=True)
+    LastName = db.Column(db.String(255), nullable=True)
+    FirstName = db.Column(db.String(255), nullable=True)
+    MiddleName = db.Column(db.String(255), nullable=True)
 
 class Day(db.Model):
     __tablename__ = 'Day'
-    id = db.Column(db.Integer, primary_key=True)
-    date = db.Column(db.String(50), nullable=True)
+    ID = db.Column(db.Integer, primary_key=True)
+    Date = db.Column(db.String(50), nullable=True)
 
 class Group(db.Model):
     __tablename__ = 'Group'
-    id = db.Column(db.Integer, primary_key=True)
-    direction = db.Column(db.String(255), nullable=True)
-    group_code = db.Column(db.String(50), nullable=True)
-    name = db.Column(db.String(255), nullable=True)
+    ID = db.Column(db.Integer, primary_key=True)
+    Direction = db.Column(db.String(255), nullable=True)
+    GroupCode = db.Column(db.String(50), nullable=True)
+    Name = db.Column(db.String(255), nullable=True)
 
 # Create the API endpoint to fetch the schedule
 @app.route('/schedule', methods=['GET'])
 def get_schedule():
     paras = db.session.query(Para).all()
 
+    # Fetch all related data
+    teachers = {teacher.ID: teacher for teacher in db.session.query(Teacher).all()}
+    groups = {group.ID: group for group in db.session.query(Group).all()}
+    rooms = {room.ID: room for room in db.session.query(Room).all()}
+    subjects = {subject.ID: subject for subject in db.session.query(Subject).all()}
+    days = {day.ID: day for day in db.session.query(Day).all()}
+
     schedule = []
     for para in paras:
-        teacher = db.session.query(Teacher).filter_by(id=para.TeacherID).first()
-        group = db.session.query(Group).filter_by(id=para.GroupID).first()
-        room = db.session.query(Room).filter_by(id=para.RoomID).first()
-        subject = db.session.query(Subject).filter_by(id=para.SubjectID).first()
-        day = db.session.query(Day).filter_by(id=para.DayID).first()
+        teacher = teachers.get(para.TeacherID)
+        group = groups.get(para.GroupID)
+        room = rooms.get(para.RoomID)
+        subject = subjects.get(para.SubjectID)
+        day = days.get(para.DayID)
 
         schedule.append({
             'ID': para.ID,
-            'Teacher': f"{teacher.last_name} {teacher.first_name} {teacher.middle_name}" if teacher else None,
-            'Group': group.name if group else None,
-            'Room': room.room_number if room else None,
-            'Subject': subject.name if subject else None,
-            'Day': day.date if day else None,
+            'Teacher': f"{teacher.LastName} {teacher.FirstName} {teacher.MiddleName}" if teacher else None,
+            'Group': group.Name if group else None,
+            'Room': room.RoomNumber if room else None,
+            'Subject': subject.Name if subject else None,
+            'Day': day.Date if day else None,
             'ClassNumber': para.ClassNumber,
             'PairNumber': para.PairNumber
         })
