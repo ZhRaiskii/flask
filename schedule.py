@@ -84,6 +84,9 @@ def get_schedule():
         Day, Para.DayID == Day.id
     ).all()
 
+    # Debug statement to print the query result
+    print(paras)
+
     schedule = []
     for para, teacher_last_name, teacher_first_name, teacher_middle_name, group_name, room_number, subject_name, date in paras:
         schedule.append({
@@ -97,6 +100,7 @@ def get_schedule():
             'PairNumber': para.PairNumber
         })
     return jsonify(schedule)
+
 
 if __name__ == '__main__':
     app.run(debug=True, host="0.0.0.0", port=5321)
