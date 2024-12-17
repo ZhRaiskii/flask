@@ -12,14 +12,15 @@ db = SQLAlchemy(app)
 # Define the data models
 class Para(db.Model):
     __tablename__ = 'Para'
-    id = db.Column(db.Integer, primary_key=True)
-    teacher_id = db.Column(db.Integer, nullable=True)  # Ensure this line is present
-    group_id = db.Column(db.Integer, nullable=True)
-    room_id = db.Column(db.Integer, nullable=True)
-    subject_id = db.Column(db.Integer, nullable=True)
-    day_id = db.Column(db.Integer, nullable=True)
-    class_number = db.Column(db.Integer, nullable=True)
-    pair_number = db.Column(db.Integer, nullable=True)
+    ID = db.Column(db.Integer, primary_key=True)
+    TeacherID = db.Column(db.Integer, nullable=True)
+    GroupID = db.Column(db.Integer, nullable=True)
+    RoomID = db.Column(db.Integer, nullable=True)
+    SubjectID = db.Column(db.Integer, nullable=True)
+    DayID = db.Column(db.Integer, nullable=True)
+    ClassNumber = db.Column(db.Integer, nullable=True)
+    PairNumber = db.Column(db.Integer, nullable=True)
+
 
 class Room(db.Model):
     __tablename__ = 'Room'
@@ -67,16 +68,17 @@ def get_schedule():
     schedule = []
     for para in paras:
         schedule.append({
-            'id': para.id,
-            'teacher_id': para.teacher_id,
-            'group_id': para.group_id,
-            'room_id': para.room_id,
-            'subject_id': para.subject_id,
-            'day_id': para.day_id,
-            'class_number': para.class_number,
-            'pair_number': para.pair_number
+            'ID': para.ID,
+            'TeacherID': para.TeacherID,
+            'GroupID': para.GroupID,
+            'RoomID': para.RoomID,
+            'SubjectID': para.SubjectID,
+            'DayID': para.DayID,
+            'ClassNumber': para.ClassNumber,
+            'PairNumber': para.PairNumber
         })
     return jsonify(schedule)
+
 
 if __name__ == '__main__':
     app.run(debug=True, host="0.0.0.0", port=5321)
