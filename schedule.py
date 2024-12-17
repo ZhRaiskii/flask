@@ -3,13 +3,11 @@ from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 
-# Configure the database connection
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://sql7751052:3VSnLU8Jzj@sql7.freesqldatabase.com/sql7751052'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://sql8752605:63YTNVES7g@sql8.freemysqlhosting.net:3306/sql8752605'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 
-# Define the data models
 class Para(db.Model):
     __tablename__ = 'Para'
     ID = db.Column(db.Integer, primary_key=True)
