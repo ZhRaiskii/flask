@@ -58,12 +58,10 @@ class Group(db.Model):
     GroupCode = db.Column(db.String(50), nullable=True)
     Name = db.Column(db.String(255), nullable=True)
 
-# Create the API endpoint to fetch the schedule
 @app.route('/schedule', methods=['GET'])
 def get_schedule():
     paras = db.session.query(Para).all()
 
-    # Fetch all related data
     teachers = {teacher.ID: teacher for teacher in db.session.query(Teacher).all()}
     groups = {group.ID: group for group in db.session.query(Group).all()}
     rooms = {room.ID: room for room in db.session.query(Room).all()}
